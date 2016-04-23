@@ -2,6 +2,9 @@ import tensorflow as tf
 
 
 def _weight_var(shape, wd=0):
+    """Wrap the variable definition process to include weight decay (l2 
+    penalty).
+    """
     initial = tf.truncated_normal(shape, stddev=0.1)
     var = tf.Variable(initial)
     # optional weigth decay (l2)
@@ -79,6 +82,7 @@ def loss(y_conv, y):
 
 
 def training(loss, lr):
+    """Define the training operation using basic SGD"""
     tf.scalar_summary(loss.op.name, loss)
     optimizer = tf.train.GradientDescentOptimizer(lr)
     global_step = tf.Variable(0, name='global_step', trainable=False)
@@ -87,6 +91,7 @@ def training(loss, lr):
 
 
 def evaluation(y_conv, y):
+    """Evaluation operation to calculate accuracy"""
     correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y,1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     return accuracy    

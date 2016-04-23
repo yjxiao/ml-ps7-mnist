@@ -1,10 +1,11 @@
+from __future__ import division, print_function
 import tensorflow as tf
 from sklearn.preprocessing import LabelBinarizer
 
 from data import read_dataset
 import model
 
-def getAccuracy(x, y, keep_prob, binarizer, acc, dataset, sess):
+def get_accuracy(x, y, acc, session):
     dataset_accuracy = 0
     # TODO: Compute accuracy on the dataset
     return dataset_accuracy
@@ -29,16 +30,19 @@ def train():
         batch_xs, batch_ys = tr.next_batch(50)
         if i % 100 == 0:
             train_acc = acc.eval(feed_dict={
-                x:va.data[0], y:binarizer.transform(va.data[1]),
+                x:batch_xs, y:binarizer.transform(batch_ys),
                 keep_prob: 1.0}, session=sess)
-            print "step: {0}, training accuracy {1}".format(i, train_acc)
-            validation_accuracy = getAccuracy(x, y, keep_prob, binarizer, acc, va, sess)
-            print("Validation accuracy : {0}".format(validation_accuracy))
+            print("step: {0}, training accuracy : {1}".format(i, train_acc))
+            validation_acc = get_accuracy(va.data[0],
+                                          binarizer.transform(va.data[1]),
+                                          acc, sess)
+            print("Validation accuracy : {0}".format(validation_acc))
         train_op.run(feed_dict={
             x:batch_xs, y:binarizer.transform(batch_ys), keep_prob: 0.5},
                      session=sess)
 
-    test_accuracy = getAccuracy(x, y, keep_prob, binarizer, acc, te, sess)
+    test_accuracy = get_accuracy(te.data[0], binarizer.transform(te.data[1]),
+                                 acc, sess)
     print("Test accuracy : ", test_accuracy)
 
 if __name__ == '__main__':

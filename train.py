@@ -25,7 +25,7 @@ def train():
         batch_xs, batch_ys = tr.next_batch(50)
         if i % 100 == 0:
             train_acc = acc.eval(feed_dict={
-                x:batch_xs, y:binarizer.transform(batch_ys),
+                x:va.data[0], y:binarizer.transform(va.data[1]),
                 keep_prob: 1.0}, session=sess)
             print "step: {0}, training accuracy {1}".format(i, train_acc)
         train_op.run(feed_dict={

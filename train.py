@@ -11,7 +11,7 @@ def get_accuracy(x, y, acc, session):
     return dataset_accuracy
 
 def train():
-    tr, va, te = read_dataset('../mnist.pkl.gz')
+    tr, va, te = read_dataset('data/mnist.pkl.gz')
     binarizer = LabelBinarizer().fit(range(10))
 
     x = tf.placeholder(tf.float32, [None, 784])
